@@ -50,7 +50,20 @@ def registrar_rotas_alunos(app):
         db.session.add(novo_aluno)
         db.session.commit()
 
-        return jsonify({'mensagem': 'Aluno criado com sucesso', 'id': novo_aluno.id}), 201
+        return jsonify({
+            'mensagem': 'Aluno criado com sucesso',
+            'aluno': {
+                'id': novo_aluno.id,
+                'nome': novo_aluno.nome,
+                'idade': novo_aluno.idade,
+                'data_nascimento': novo_aluno.data_nascimento.strftime('%Y-%m-%d') if novo_aluno.data_nascimento else None,
+                'nota_primeiro_semestre': novo_aluno.nota_primeiro_semestre,
+                'nota_segundo_semestre': novo_aluno.nota_segundo_semestre,
+                'media_final': novo_aluno.media_final,
+                'turma_id': novo_aluno.turma_id,
+                'turma': novo_aluno.turma.descricao if novo_aluno.turma else None
+            }
+        }), 201
 
     @app.route('/alunos/<int:id>', methods=['PUT'])
     def atualizar_aluno(id):
@@ -74,7 +87,21 @@ def registrar_rotas_alunos(app):
             aluno.turma_id = dados['turma_id']
 
         db.session.commit()
-        return jsonify({'mensagem': 'Aluno atualizado com sucesso'})
+
+        return jsonify({
+            'mensagem': 'Aluno atualizado com sucesso',
+            'aluno': {
+                'id': aluno.id,
+                'nome': aluno.nome,
+                'idade': aluno.idade,
+                'data_nascimento': aluno.data_nascimento.strftime('%Y-%m-%d') if aluno.data_nascimento else None,
+                'nota_primeiro_semestre': aluno.nota_primeiro_semestre,
+                'nota_segundo_semestre': aluno.nota_segundo_semestre,
+                'media_final': aluno.media_final,
+                'turma_id': aluno.turma_id,
+                'turma': aluno.turma.descricao if aluno.turma else None
+            }
+        })
 
     @app.route('/alunos/<int:id>', methods=['DELETE'])
     def deletar_aluno(id):
