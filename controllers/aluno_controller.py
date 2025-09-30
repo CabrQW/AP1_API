@@ -2,7 +2,7 @@ from flask import request, jsonify
 from app import db
 from models.aluno import Aluno
 from models.turma import Turma
-from datetime import datetime
+from dateutil import parser  # <- Import necessário
 
 def registrar_rotas_alunos(app):
 
@@ -34,8 +34,8 @@ def registrar_rotas_alunos(app):
             return jsonify({'erro': 'Turma não encontrada'}), 404
 
         data_nasc = None
-        if 'data_nascimento' in dados:
-            data_nasc = datetime.strptime(dados['data_nascimento'], '%Y-%m-%d').date()
+        if 'data_nascimento' in dados and dados['data_nascimento']:
+            data_nasc = parser.parse(dados['data_nascimento']).date()
 
         novo_aluno = Aluno(
             nome=dados['nome'],
@@ -73,8 +73,8 @@ def registrar_rotas_alunos(app):
         aluno.nome = dados.get('nome', aluno.nome)
         aluno.idade = dados.get('idade', aluno.idade)
 
-        if 'data_nascimento' in dados:
-            aluno.data_nascimento = datetime.strptime(dados['data_nascimento'], '%Y-%m-%d').date()
+        if 'data_nascimento' in dados and dados['data_nascimento']:
+            aluno.data_nascimento = parser.parse(dados['data_nascimento']).date()
 
         aluno.nota_primeiro_semestre = dados.get('nota_primeiro_semestre', aluno.nota_primeiro_semestre)
         aluno.nota_segundo_semestre = dados.get('nota_segundo_semestre', aluno.nota_segundo_semestre)
