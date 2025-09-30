@@ -15,7 +15,7 @@ class CustomJSONProvider(DefaultJSONProvider):
             return obj.strftime('%Y-%m-%d')
         return super().default(obj)
 
-app = Flask(__name__, template_folder=os.path.join('view', 'templates'))
+app = Flask(__name__)
 app.config.from_object(Config)
 app.json = CustomJSONProvider(app)
 
