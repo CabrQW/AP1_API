@@ -173,54 +173,9 @@ docker build -t minha-api-flask .
 docker run -p 5000:5000 minha-api-flask
 ```
 
-Exemplo `docker-compose.yml` (opcional):
-
-```yaml
-version: '3.8'
-services:
-  web:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - FLASK_APP=app.py
-```
-
-Observação: para persistir o arquivo sqlite entre execuções com Docker, monte um volume:
-
-```bash
-docker run -v $(pwd)/data:/app -p 5000:5000 minha-api-flask
-```
-
-ou no `docker-compose` use `volumes`.
-
-## Controle de versão (GitHub)
-
-* Faça commits pequenos e com mensagens descritivas (ex.: `feat: add aluno CRUD`, `fix: validate turma existence on aluno create`, `chore: add Dockerfile`).
-* Tenha um `.gitignore` incluindo `.venv/`, `__pycache__/`, `*.pyc`, `app.db` (a não ser que queira commitar o DB), `.env`.
-
-Exemplo de fluxo:
-
-```bash
-git init
-git add .
-git commit -m "chore: projeto inicial com models e endpoints básicos"
-git branch -M main
-git remote add origin git@github.com:seu-usuario/seu-repo.git
-git push -u origin main
-```
-
-## Boas práticas e considerações
-
-* Separe rotas em blueprints ou módulos `controllers` para facilitar manutenção.
-* Trate erros de forma consistente (erro 400/404/500) e devolva mensagens padronizadas em JSON.
-* Valide e faça sanitização dos dados de entrada (use Marshmallow, Pydantic ou validações manuais).
-* Em produção, não rode Flask com `debug=True`. Use um WSGI server (Gunicorn/uvicorn) e um proxy reverso (NGINX) se necessário.
-* Considere usar testes automatizados (pytest) para endpoints e modelos.
-
 ## Endpoints principais
 
-> Abaixo está um resumo dos endpoints já implementados no seu `app.py` (descrições resumidas):
+> Abaixo está um resumo dos endpoints já implementados no `app.py` (descrições resumidas):
 
 * `GET /api/alunos` — lista alunos
 
