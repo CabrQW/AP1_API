@@ -136,29 +136,6 @@ Por padrão o `app.py` do exemplo roda em `http://localhost:5000`.
 * O projeto usa SQLite por padrão (arquivo `app.db` no root).
 * No `app.py` do exemplo você tem `db.create_all()` dentro do `app.app_context()` para criar as tabelas automaticamente.
 
-### Usando migrations (opcional, recomendado para projetos reais)
-
-Se preferir usar Alembic/Flask-Migrate:
-
-```bash
-pip install Flask-Migrate
-```
-
-No `app.py`/`__init__` do pacote, inicialize o Migrate:
-
-```py
-from flask_migrate import Migrate
-migrate = Migrate(app, db)
-```
-
-Comandos:
-
-```bash
-flask db init
-flask db migrate -m "create tables"
-flask db upgrade
-```
-
 ## Documentação da API (Swagger)
 
 Este projeto utiliza **Flasgger** para gerar a documentação Swagger a partir das docstrings dos endpoints (como no `app.py` que você enviou).
