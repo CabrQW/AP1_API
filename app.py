@@ -531,29 +531,11 @@ def api_list_turmas():
     ---
     tags:
       - Turmas
-    description: Retorna todas as turmas cadastradas em JSON
     produces:
       - application/json
     responses:
       200:
         description: Lista de turmas
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 1
-              descricao:
-                type: string
-                example: Turma A
-              professor_id:
-                type: integer
-                example: 2
-              professor:
-                type: string
-                example: João da Silva
     """
     turmas = Turma.query.all()
     resultado = [
@@ -561,7 +543,9 @@ def api_list_turmas():
             'id': t.id,
             'descricao': t.descricao,
             'professor_id': t.professor_id,
-            'professor': t.professor.nome if t.professor else None
+            'professor': t.professor.nome if t.professor else None,
+            'ativo': t.ativo,
+            'alunos': [a.nome for a in t.alunos] if hasattr(t, 'alunos') else []
         }
         for t in turmas
     ]
@@ -582,7 +566,6 @@ def api_create_turma():
     parameters:
       - in: body
         name: turma
-        description: Objeto JSON com os dados da turma
         required: true
         schema:
           type: object
@@ -596,26 +579,17 @@ def api_create_turma():
             professor_id:
               type: integer
               example: 2
+            ativo:
+              type: boolean
+              example: true
+            alunos:
+              type: array
+              items:
+                type: integer
+              example: [1, 2]
     responses:
       201:
         description: Turma criada com sucesso
-        schema:
-          type: object
-          properties:
-            mensagem:
-              type: string
-              example: Turma criada
-            id:
-              type: integer
-              example: 3
-      400:
-        description: Requisição inválida
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
-              example: "Campos obrigatórios faltando"
     """
     dados = request.get_json()
     if not dados or not all(k in dados for k in ('descricao', 'professor_id')):
@@ -627,8 +601,14 @@ def api_create_turma():
 
     nova_turma = Turma(
         descricao=dados['descricao'],
-        professor_id=dados['professor_id']
+        professor_id=dados['professor_id'],
+        ativo=dados.get('ativo', True)
     )
+
+    if 'alunos' in dados:
+        alunos = Aluno.query.filter(Aluno.id.in_(dados['alunos'])).all()
+        nova_turma.alunos = alunos
+
     db.session.add(nova_turma)
     db.session.commit()
 
@@ -652,9 +632,8 @@ def api_update_turma(id):
     parameters:
       - in: path
         name: id
-        type: integer
         required: true
-        description: ID da turma a ser atualizada
+        type: integer
       - in: body
         name: turma
         required: true
@@ -663,43 +642,39 @@ def api_update_turma(id):
           properties:
             descricao:
               type: string
-              example: Turma C
             professor_id:
               type: integer
-              example: 3
+            ativo:
+              type: boolean
+            alunos:
+              type: array
+              items:
+                type: integer
     responses:
       200:
         description: Turma atualizada com sucesso
-        schema:
-          type: object
-          properties:
-            mensagem:
-              type: string
-              example: "Turma atualizada"
       404:
         description: Turma não encontrada
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
-              example: "Turma não encontrada"
     """
     turma = Turma.query.get(id)
     if not turma:
         return jsonify({"error": "Turma não encontrada"}), 404
 
     dados = request.get_json()
-    if 'descricao' in dados:
-        turma.descricao = dados['descricao']
+    turma.descricao = dados.get('descricao', turma.descricao)
+    turma.ativo = dados.get('ativo', turma.ativo)
+
     if 'professor_id' in dados:
         professor = Professor.query.get(dados['professor_id'])
         if not professor:
             return jsonify({"error": "Professor não encontrado"}), 404
         turma.professor_id = dados['professor_id']
 
-    db.session.commit()
+    if 'alunos' in dados:
+        alunos = Aluno.query.filter(Aluno.id.in_(dados['alunos'])).all()
+        turma.alunos = alunos
 
+    db.session.commit()
     return jsonify({'mensagem': 'Turma atualizada'}), 200
 
 
@@ -713,26 +688,13 @@ def api_delete_turma(id):
     parameters:
       - in: path
         name: id
-        type: integer
         required: true
-        description: ID da turma a ser removida
+        type: integer
     responses:
       200:
         description: Turma removida com sucesso
-        schema:
-          type: object
-          properties:
-            mensagem:
-              type: string
-              example: "Turma deletada"
       404:
         description: Turma não encontrada
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
-              example: "Turma não encontrada"
     """
     turma = Turma.query.get(id)
     if not turma:
