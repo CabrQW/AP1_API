@@ -274,20 +274,3 @@ curl -X POST http://127.0.0.1:5000/api/alunos \
   -d '{"nome":"Maria","idade":15,"turma_id":1}'
 ```
 
-## Próximos passos sugeridos
-
-* Separar rotas em Blueprints (`controllers/`) para melhor organização.
-* Adicionar validação com Marshmallow (serialização/validação).
-* Implementar Flask-Migrate para versionamento de banco.
-* Adicionar testes automatizados e CI (ex.: GitHub Actions).
-
----
-
-Se quiser, gero também:
-
-* `requirements.txt` pronto com as versões mais compatíveis;
-* `Dockerfile` e `docker-compose.yml` completos (já tem um exemplo acima, posso gerar arquivo real);
-* arquivos de `models/` (aluno.py, turma.py, professor.py) baseados no que seu `app.py` espera;
-* separar as rotas em `controllers/` (blueprints) e ajustar `app.py` para registrar blueprints.
-
-Quer que eu adicione algum desses arquivos agora?
