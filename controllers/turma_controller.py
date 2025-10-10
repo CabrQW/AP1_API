@@ -5,7 +5,7 @@ from models.aluno import Aluno
 
 def registrar_rotas_turmas(app):
 
-    @app.route('/turmas', methods=['GET'])
+    @app.route('/api/turmas', methods=['GET'])
     def listar_turmas():
         turmas = Turma.query.all()
         resultado = [
@@ -21,7 +21,7 @@ def registrar_rotas_turmas(app):
         ]
         return jsonify(resultado)
 
-    @app.route('/turmas', methods=['POST'])
+    @app.route('/api/turmas', methods=['POST'])
     def criar_turma():
         dados = request.get_json()
         nova_turma = Turma(
@@ -38,7 +38,7 @@ def registrar_rotas_turmas(app):
         db.session.commit()
         return jsonify({'mensagem': 'Turma criada', 'id': nova_turma.id}), 201
 
-    @app.route('/turmas/<int:id>', methods=['PUT'])
+    @app.route('/api/turmas/<int:id>', methods=['PUT'])
     def atualizar_turma(id):
         turma = Turma.query.get_or_404(id)
         dados = request.get_json()
@@ -54,7 +54,7 @@ def registrar_rotas_turmas(app):
         db.session.commit()
         return jsonify({'mensagem': 'Turma atualizada.'})
 
-    @app.route('/turmas/<int:id>', methods=['DELETE'])
+    @app.route('/api/turmas/<int:id>', methods=['DELETE'])
     def deletar_turma(id):
         turma = Turma.query.get_or_404(id)
         db.session.delete(turma)

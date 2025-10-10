@@ -4,7 +4,7 @@ from models.professor import Professor
 
 def registrar_rotas_professor(app):
 
-    @app.route('/professores', methods=['GET'])
+    @app.route('/api/professores', methods=['GET'])
     def listar_professores():
         professores = Professor.query.all()
         resultado = [{'id': p.id, 
@@ -17,7 +17,7 @@ def registrar_rotas_professor(app):
                       for p in professores
         ]
         return jsonify(resultado)
-    @app.route('/professores', methods=['POST'])
+    @app.route('/api/professores', methods=['POST'])
     def criar_professor():
         dados = request.get_json()
         novo = Professor(
@@ -29,7 +29,7 @@ def registrar_rotas_professor(app):
         db.session.add(novo)
         db.session.commit()
         return jsonify({'mensagem': 'Professor criado', 'id': novo.id}), 201
-    @app.route('/professores/<int:id>', methods=['PUT'])
+    @app.route('/api/professores/<int:id>', methods=['PUT'])
     def atualizar_professor(id):
         prof = Professor.query.get_or_404(id)
         dados = request.get_json()
@@ -39,7 +39,7 @@ def registrar_rotas_professor(app):
         prof.observacao = dados.get('observacao', prof.observacao)
         db.session.commit()
         return jsonify({'mensagem': 'Professor atualizado.'})
-    @app.route('/professores/<int:id>', methods=['DELETE'])
+    @app.route('/api/professores/<int:id>', methods=['DELETE'])
     def deletar_professor(id):
         prof = Professor.query.get_or_404(id)
         db.session.delete(prof)

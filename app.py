@@ -27,6 +27,9 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
+
+
 @app.route('/api/alunos', methods=['GET'])
 def api_list_alunos():
     """
@@ -582,11 +585,6 @@ def api_create_turma():
             ativo:
               type: boolean
               example: true
-            alunos:
-              type: array
-              items:
-                type: integer
-              example: [1, 2]
     responses:
       201:
         description: Turma criada com sucesso
@@ -604,11 +602,6 @@ def api_create_turma():
         professor_id=dados['professor_id'],
         ativo=dados.get('ativo', True)
     )
-
-    if 'alunos' in dados:
-        alunos = Aluno.query.filter(Aluno.id.in_(dados['alunos'])).all()
-        nova_turma.alunos = alunos
-
     db.session.add(nova_turma)
     db.session.commit()
 
@@ -682,6 +675,7 @@ def api_update_turma(id):
 def api_delete_turma(id):
     """
     Remove uma turma existente pelo ID.
+    Se houver alunos nessa turma, eles terão o campo turma_id definido como NULL.
     ---
     tags:
       - Turmas
@@ -690,19 +684,39 @@ def api_delete_turma(id):
         name: id
         required: true
         type: integer
+        description: ID da turma a ser removida
     responses:
       200:
         description: Turma removida com sucesso
+        schema:
+          type: object
+          properties:
+            mensagem:
+              type: string
+              example: Turma deletada, alunos ficaram sem turma
       404:
         description: Turma não encontrada
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: Turma não encontrada
     """
     turma = Turma.query.get(id)
     if not turma:
         return jsonify({"error": "Turma não encontrada"}), 404
 
+    # Remove referência da turma dos alunos
+    for aluno in turma.alunos:
+        aluno.turma_id = None
+    db.session.commit()
+
+    # Deleta a turma
     db.session.delete(turma)
     db.session.commit()
-    return jsonify({'mensagem': 'Turma deletada'}), 200
+
+    return jsonify({'mensagem': 'Turma deletada, alunos ficaram sem turma'}), 200
 
 
 if __name__ == '__main__':

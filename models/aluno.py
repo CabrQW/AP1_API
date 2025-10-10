@@ -6,7 +6,7 @@ class Aluno(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=False)
-    turma_id = db.Column(db.Integer, db.ForeignKey("turmas.id"), nullable=False)
+    turma_id = db.Column(db.Integer, db.ForeignKey("turmas.id"), nullable=True)
     data_nascimento = db.Column(db.Date)
     nota_primeiro_semestre = db.Column(db.Float)
     nota_segundo_semestre = db.Column(db.Float)

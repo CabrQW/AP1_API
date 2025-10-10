@@ -6,7 +6,7 @@ from dateutil import parser  # <- Import necessário
 
 def registrar_rotas_alunos(app):
 
-    @app.route('/alunos', methods=['GET'])
+    @app.route('/api/alunos', methods=['GET'])
     def listar_alunos():
         alunos = Aluno.query.all()
         resultado = [
@@ -25,7 +25,7 @@ def registrar_rotas_alunos(app):
         ]
         return jsonify(resultado)
 
-    @app.route('/alunos', methods=['POST'])
+    @app.route('/api/alunos', methods=['POST'])
     def criar_aluno():
         dados = request.get_json()
 
@@ -65,7 +65,7 @@ def registrar_rotas_alunos(app):
             }
         }), 201
 
-    @app.route('/alunos/<int:id>', methods=['PUT'])
+    @app.route('/api/alunos/<int:id>', methods=['PUT'])
     def atualizar_aluno(id):
         aluno = Aluno.query.get_or_404(id)
         dados = request.get_json()
@@ -103,7 +103,7 @@ def registrar_rotas_alunos(app):
             }
         })
 
-    @app.route('/alunos/<int:id>', methods=['DELETE'])
+    @app.route('/api/alunos/<int:id>', methods=['DELETE'])
     def deletar_aluno(id):
         aluno = Aluno.query.get_or_404(id)
         db.session.delete(aluno)
