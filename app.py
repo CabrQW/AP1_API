@@ -707,12 +707,12 @@ def api_delete_turma(id):
     if not turma:
         return jsonify({"error": "Turma não encontrada"}), 404
 
-    # Remove referência da turma dos alunos
+
     for aluno in turma.alunos:
         aluno.turma_id = None
     db.session.commit()
 
-    # Deleta a turma
+
     db.session.delete(turma)
     db.session.commit()
 
