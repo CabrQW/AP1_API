@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from app import db
+from reservas.app import db
 from models.aluno import Aluno
 from models.turma import Turma
 from dateutil import parser  # <- Import necessário
