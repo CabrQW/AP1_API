@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from app import db
+from reservas.app import db
 from models.professor import Professor
 
 def registrar_rotas_professor(app):
