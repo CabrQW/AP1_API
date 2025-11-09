@@ -1,7 +1,7 @@
-Projeto API Escolar - Microsserviços
-Descrição do Projeto
+🏫 Projeto API Escolar - Microsserviços
+📖 Descrição do Projeto
 
-Este projeto consiste em três microsserviços que formam um ecossistema de gestão escolar:
+Este projeto consiste em três microsserviços independentes que formam um ecossistema de gestão escolar:
 
 Gerenciamento – Gerencia alunos, professores e turmas.
 
@@ -9,31 +9,30 @@ Atividades – Gerencia atividades acadêmicas e notas de alunos.
 
 Reservas – Gerencia reservas de salas e laboratórios para turmas.
 
-Cada microsserviço é independente, possui seu próprio banco de dados e endpoints RESTful. A comunicação entre serviços é realizada de forma síncrona, utilizando a biblioteca requests do Python.
+Cada microsserviço possui sua própria API RESTful, banco de dados independente e documentação Swagger para facilitar testes e integração.
+A comunicação entre os serviços é síncrona, utilizando a biblioteca requests do Python.
 
-A documentação de cada serviço é disponibilizada via Swagger, permitindo testar endpoints e entender os parâmetros e respostas de cada API.
+🏗 Arquitetura do Projeto
 
-Arquitetura do Projeto
+Microsserviços independentes e autônomos
 
-Microsserviços independentes: Cada serviço é autônomo e gerencia suas próprias responsabilidades.
+Banco de dados individual para cada serviço (SQLite ou PostgreSQL)
 
-Banco de dados: Cada serviço possui seu próprio banco SQL (SQLite ou PostgreSQL configurável).
+Comunicação síncrona com requests
 
-Comunicação entre microsserviços: Síncrona usando requests.
+Flask + SQLAlchemy para rotas e persistência
 
-Flask + SQLAlchemy: Para gerenciamento de rotas e persistência de dados.
-
-Swagger: Documentação e teste de APIs integrado via docstrings.
+Swagger para documentação interativa
 
 Fluxo de integração:
 
-Atividades valida IDs de Turma e Professor do microsserviço de Gerenciamento.
+Atividades valida IDs de Turma e Professor no microsserviço de Gerenciamento.
 
-Notas valida IDs de Aluno e Atividade do microsserviço correspondente.
+Notas valida IDs de Aluno no microsserviço de Gerenciamento e de Atividade no microsserviço de Atividades.
 
-Reservas valida IDs de Turma do microsserviço de Gerenciamento.
+Reservas valida IDs de Turma no microsserviço de Gerenciamento.
 
-Estrutura de Pastas
+📂 Estrutura de Pastas
 AP1_API/
 ├─ atividades/
 │  ├─ controllers/
@@ -53,17 +52,17 @@ AP1_API/
 ├─ docker-compose.yml
 └─ README.md
 
-Documentação Swagger
+📌 Documentação Swagger
 
-Cada microsserviço possui Swagger integrado via docstrings:
+Cada microsserviço possui Swagger integrado via docstrings do Flask:
 
-Gerenciamento: /swagger
+Gerenciamento: http://localhost:5000/swagger
 
-Atividades: /swagger
+Atividades: http://localhost:5001/swagger
 
-Reservas: /swagger
+Reservas: http://localhost:5002/swagger
 
-Exemplo de rota documentada em Swagger:
+Exemplo de docstring Swagger para criação de atividade:
 
 @atividade_bp.route('/', methods=['POST'])
 def criar_atividade():
@@ -97,17 +96,14 @@ def criar_atividade():
         description: Erro ao criar a atividade
     """
 
-Executando os microsserviços com Docker
+🐳 Executando com Docker
 Pré-requisitos
 
 Docker Desktop
 
 Python 3.11+
 
-Passos
-
-No diretório raiz (AP1_API/), crie o docker-compose.yml com:
-
+1️⃣ Criar docker-compose.yml
 services:
   gerenciamento:
     build: ./gerenciamento
@@ -125,36 +121,25 @@ services:
     ports:
       - "5002:5000"
 
-
-Buildar os containers:
-
+2️⃣ Build dos containers
 docker-compose build
 
-
-Subir os serviços:
-
+3️⃣ Subir os microsserviços
 docker-compose up
 
+4️⃣ Acessar os serviços
 
-Acessar as APIs via:
+Gerenciamento: http://localhost:5000
 
-http://localhost:5000 – Gerenciamento
+Atividades: http://localhost:5001
 
-http://localhost:5001 – Atividades
-
-http://localhost:5002 – Reservas
+Reservas: http://localhost:5002
 
 Swagger estará disponível nos endpoints /swagger de cada serviço.
 
-Integração entre microsserviços
+🔗 Integração entre microsserviços
 
-Atividades precisa consultar Turmas e Professores em Gerenciamento.
-
-Notas valida se Aluno existe em Gerenciamento e se Atividade existe em Atividades.
-
-Reservas valida se Turma existe em Gerenciamento.
-
-Exemplo de requisição entre microsserviços usando requests:
+Exemplo de requisição síncrona usando requests:
 
 import requests
 
@@ -163,19 +148,23 @@ res = requests.get(f"http://localhost:5000/turmas/{turma_id}")
 if res.status_code != 200:
     raise Exception("Turma não encontrada")
 
-Requisitos Python
 
-requirements.txt padrão para cada serviço:
+Atividades consulta Gerenciamento (Turmas e Professores)
 
+Notas consulta Gerenciamento (Alunos) e Atividades (Atividades)
+
+Reservas consulta Gerenciamento (Turmas)
+
+📦 Requisitos Python (requirements.txt)
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.4
 requests==2.32.0
 flasgger==1.9.5
 
-Observações
+⚡ Observações
 
-Cada serviço pode ser executado de forma independente para testes locais.
+Cada serviço pode ser executado independentemente para testes locais.
 
-Cada microsserviço possui Swagger para facilitar documentação e testes de endpoints.
+Arquitetura síncrona simples, sem Celery ou Redis.
 
-Arquitetura síncrona simples, sem Celery ou Redis, garantindo fácil entendimento e deploy local.
+Swagger permite testar todas as rotas de forma interativa.
