@@ -165,6 +165,6 @@ flasgger==1.9.5
 
 Cada serviço pode ser executado independentemente para testes locais.
 
-Arquitetura síncrona simples, sem Celery ou Redis.
+Arquitetura síncrona simples
 
 Swagger permite testar todas as rotas de forma interativa.
