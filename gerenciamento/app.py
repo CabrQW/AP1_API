@@ -382,7 +382,7 @@ def api_list_professores():
             'idade': p.idade,
             'materia': p.materia,
             'observacao': p.observacao,
-            'turmas': [t.nome for t in p.turmas] if hasattr(p, 'turmas') else []
+            'turmas': [t.descricao for t in p.turmas] if hasattr(p, 'turmas') else []
         }
         for p in professores
     ]
@@ -445,6 +445,41 @@ def api_create_professor():
     db.session.add(novo)
     db.session.commit()
     return jsonify({'mensagem': 'Professor criado', 'id': novo.id}), 201
+
+
+@app.route('/api/professores/<int:id>', methods=['GET'])
+def api_get_professor(id):
+    """
+    Retorna os dados de um professor específico.
+    ---
+    tags:
+      - Professores
+    parameters:
+      - name: id
+        in: path
+        required: true
+        type: integer
+        description: ID do professor
+    responses:
+      200:
+        description: Professor encontrado
+      404:
+        description: Professor não encontrado
+    """
+    professor = Professor.query.get(id)
+    if not professor:
+        return jsonify({"erro": "Professor não encontrado"}), 404
+
+    resultado = {
+        "id": professor.id,
+        "nome": professor.nome,
+        "idade": professor.idade,
+        "materia": professor.materia,
+        "observacao": professor.observacao,
+        "turmas": [t.descricao for t in professor.turmas] if hasattr(professor, "turmas") else []
+    }
+    return jsonify(resultado), 200
+
 
 @app.route('/api/professores/<int:id>', methods=['PUT'])
 def api_update_professor(id):
@@ -554,6 +589,36 @@ def api_list_turmas():
     ]
     return jsonify(resultado), 200
 
+@app.route('/api/turmas/<int:id>', methods=['GET'])
+def api_get_turma(id):
+    """
+    Retorna uma turma específica pelo ID.
+    --- 
+    tags:
+      - Turmas
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Turma encontrada
+      404:
+        description: Turma não encontrada
+    """
+    turma = Turma.query.get(id)
+    if not turma:
+        return jsonify({"erro": "Turma não encontrada"}), 404
+
+    return jsonify({
+        "id": turma.id,
+        "descricao": turma.descricao,
+        "professor_id": turma.professor_id,
+        "professor": turma.professor.nome if turma.professor else None,
+        "ativo": turma.ativo,
+        "alunos": [a.nome for a in turma.alunos] if hasattr(turma, 'alunos') else []
+    }), 200
 
 @app.route('/api/turmas', methods=['POST'])
 def api_create_turma():

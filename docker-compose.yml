@@ -9,6 +9,7 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5001
     networks:
       - apinet
 
@@ -20,6 +21,7 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5000
     depends_on:
       - gerenciamento
     networks:
@@ -33,6 +35,7 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5002
     depends_on:
       - gerenciamento
       - reservas

@@ -7,8 +7,8 @@ import requests  # para comunicação síncrona entre microsserviços
 atividade_bp = Blueprint('atividade_bp', __name__)
 
 # Endpoints dos microsserviços
-URL_TURMAS = "http://localhost:5001/api/turmas/"      # microsserviço de Turmas
-URL_PROFESSORES = "http://localhost:5002/api/professores/"  # microsserviço de Professores
+URL_TURMAS = "http://gerenciamento:5001/api/turmas/"      # microsserviço de Turmas
+URL_PROFESSORES = "http://gerenciamento:5001/api/professores/"  # microsserviço de Professores
 
 # 🟢 Criar uma nova atividade
 @atividade_bp.route('/', methods=['POST'])

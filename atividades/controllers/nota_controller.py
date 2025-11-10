@@ -6,8 +6,8 @@ import requests  # comunicação síncrona entre microsserviços
 nota_bp = Blueprint('nota_bp', __name__)
 
 # Endpoints dos microsserviços
-URL_ALUNOS = "http://localhost:5003/api/alunos/"      # microsserviço de Alunos
-URL_ATIVIDADES = "http://localhost:5004/api/atividades/"  # microsserviço de Atividades
+URL_ALUNOS = "http://gerenciamento:5001/api/alunos/"      # microsserviço de Alunos
+URL_ATIVIDADES = "http://atividades:5002/api/atividades/"  # microsserviço de Atividades
 
 # 🟢 CRIAR UMA NOVA NOTA
 @nota_bp.route("/", methods=["POST"])
