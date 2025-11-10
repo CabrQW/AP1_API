@@ -56,11 +56,11 @@ AP1_API/
 
 Cada microsserviço possui Swagger integrado via docstrings do Flask:
 
-Gerenciamento: http://localhost:5000/swagger
+Reservas: http://localhost:5000/apidocs
 
-Atividades: http://localhost:5001/swagger
+Gerenciamento: http://localhost:5001/apidocs
 
-Reservas: http://localhost:5002/swagger
+Atividades: http://localhost:5002/apidocs
 
 Exemplo de docstring Swagger para criação de atividade:
 
