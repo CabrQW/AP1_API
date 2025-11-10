@@ -129,12 +129,11 @@ docker-compose up
 
 4️⃣ Acessar os serviços
 
-Gerenciamento: http://localhost:5000
+Reservas: http://localhost:5000/
 
-Atividades: http://localhost:5001
+Gerenciamento: http://localhost:5001/
 
-Reservas: http://localhost:5002
-
+Atividades: http://localhost:5002/
 Swagger estará disponível nos endpoints /swagger de cada serviço.
 
 🔗 Integração entre microsserviços
