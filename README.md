@@ -1,38 +1,36 @@
-🏫 Projeto API Escolar - Microsserviços
-📖 Descrição do Projeto
+# 🏫 Projeto API Escolar - Microsserviços
 
-Este projeto consiste em três microsserviços independentes que formam um ecossistema de gestão escolar:
+## 📖 Descrição do Projeto
 
-Gerenciamento – Gerencia alunos, professores e turmas.
+Este projeto consiste em **três microsserviços independentes** que formam um ecossistema de **gestão escolar**:
 
-Atividades – Gerencia atividades acadêmicas e notas de alunos.
+- **Gerenciamento** – Gerencia alunos, professores e turmas.  
+- **Atividades** – Gerencia atividades acadêmicas e notas de alunos.  
+- **Reservas** – Gerencia reservas de salas e laboratórios para turmas.  
 
-Reservas – Gerencia reservas de salas e laboratórios para turmas.
+Cada microsserviço possui sua própria **API RESTful**, **banco de dados independente** e **documentação Swagger** para facilitar testes e integração.  
+A comunicação entre os serviços é **síncrona**, utilizando a biblioteca `requests` do Python.
 
-Cada microsserviço possui sua própria API RESTful, banco de dados independente e documentação Swagger para facilitar testes e integração.
-A comunicação entre os serviços é síncrona, utilizando a biblioteca requests do Python.
+---
 
-🏗 Arquitetura do Projeto
+## 🏗 Arquitetura do Projeto
 
-Microsserviços independentes e autônomos
+- Microsserviços independentes e autônomos  
+- Banco de dados individual para cada serviço (**SQLite** ou **PostgreSQL**)  
+- Comunicação síncrona com `requests`  
+- `Flask` + `SQLAlchemy` para rotas e persistência  
+- `Swagger` para documentação interativa  
 
-Banco de dados individual para cada serviço (SQLite ou PostgreSQL)
+### 🔄 Fluxo de Integração
 
-Comunicação síncrona com requests
+- **Atividades** valida IDs de **Turma** e **Professor** no microsserviço de **Gerenciamento**.  
+- **Notas** valida IDs de **Aluno** (Gerenciamento) e de **Atividade** (Atividades).  
+- **Reservas** valida IDs de **Turma** no microsserviço de **Gerenciamento**.
 
-Flask + SQLAlchemy para rotas e persistência
+---
 
-Swagger para documentação interativa
-
-Fluxo de integração:
-
-Atividades valida IDs de Turma e Professor no microsserviço de Gerenciamento.
-
-Notas valida IDs de Aluno no microsserviço de Gerenciamento e de Atividade no microsserviço de Atividades.
-
-Reservas valida IDs de Turma no microsserviço de Gerenciamento.
-
-📂 Estrutura de Pastas
+## 📂 Estrutura de Pastas
+```
 AP1_API/
 ├─ atividades/
 │  ├─ controllers/
@@ -51,19 +49,23 @@ AP1_API/
 │  ├─ requirements.txt
 ├─ docker-compose.yml
 └─ README.md
+```
 
-📌 Documentação Swagger
+---
 
-Cada microsserviço possui Swagger integrado via docstrings do Flask:
+## 📘 Documentação Swagger
 
-Reservas: http://localhost:5000/apidocs
+Cada microsserviço possui Swagger integrado via **docstrings do Flask**:
 
-Gerenciamento: http://localhost:5001/apidocs
+| Serviço        | URL de Acesso Swagger                  |
+|----------------|----------------------------------------|
+| Reservas       | [http://localhost:5000/apidocs](http://localhost:5000/apidocs) |
+| Gerenciamento  | [http://localhost:5001/apidocs](http://localhost:5001/apidocs) |
+| Atividades     | [http://localhost:5002/apidocs](http://localhost:5002/apidocs) |
 
-Atividades: http://localhost:5002/apidocs
+### 🧩 Exemplo de Docstring Swagger
 
-Exemplo de docstring Swagger para criação de atividade:
-
+```python
 @atividade_bp.route('/', methods=['POST'])
 def criar_atividade():
     """
@@ -95,45 +97,57 @@ def criar_atividade():
       400:
         description: Erro ao criar a atividade
     """
+ ```
+# 🐳 Execução com Docker
 
-🐳 Executando com Docker
-Pré-requisitos
+## 📋 Pré-requisitos
 
-Docker Desktop
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Python 3.11+](https://www.python.org/downloads/)
 
-Python 3.11+
+---
 
-1️⃣ Criar docker-compose.yml
+## ⚙️ 1️⃣ Criar arquivo `docker-compose.yml`
+
+```yaml
 services:
   gerenciamento:
     build: ./gerenciamento
     container_name: gerenciamento
     ports:
       - "5000:5000"
+
   atividades:
     build: ./atividades
     container_name: atividades
     ports:
       - "5001:5000"
+
   reservas:
     build: ./reservas
     container_name: reservas
     ports:
       - "5002:5000"
+```
 
-2️⃣ Build dos containers
+## 2️⃣ Build dos containers
+```bash
 docker-compose build
+```
 
-3️⃣ Subir os microsserviços
+## 3️⃣ Subir os microsserviços
+```bash
 docker-compose up
+```
 
-4️⃣ Acessar os serviços
+## 4️⃣ Acessar os serviços
 
-Reservas: http://localhost:5000/
+| Serviço           | URL de Acesso                                    |
+| ----------------- | ------------------------------------------------ |
+| **Reservas**      | [http://localhost:5000/](http://localhost:5000/) |
+| **Gerenciamento** | [http://localhost:5001/](http://localhost:5001/) |
+| **Atividades**    | [http://localhost:5002/](http://localhost:5002/) |
 
-Gerenciamento: http://localhost:5001/
-
-Atividades: http://localhost:5002/
 Swagger estará disponível nos endpoints /swagger de cada serviço.
 
 🔗 Integração entre microsserviços
